@@ -14,10 +14,10 @@ import os
 # dirpath = os.getcwd() 
 # print("current directory is : " + dirpath)
 # path2add = ''
-filepath1 ='C:/Users/sjg27/OneDrive/Documents/GWU Data Science/Fall 19/DATS 6103 Intro to DM/googleplaystore.csv'
+filepath1 ='C:/Users/sjg27/OneDrive/Documents/GWU Data Science/Fall 19/DATS 6103 Intro to DM/Project/googleplaystore.csv'
 pdata = pd.read_csv(filepath1)
 
-filepath2 = 'C:/Users/sjg27/OneDrive/Documents/GWU Data Science/Fall 19/DATS 6103 Intro to DM/googleplaystore_user_reviews.csv'
+filepath2 = 'C:/Users/sjg27/OneDrive/Documents/GWU Data Science/Fall 19/DATS 6103 Intro to DM/Project/googleplaystore_user_reviews.csv'
 userdata = pd.read_csv(filepath2)
 
 #%% [markdown]
