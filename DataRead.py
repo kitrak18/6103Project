@@ -21,7 +21,7 @@ filepath2 = 'C:/Users/sjg27/OneDrive/Documents/GWU Data Science/Fall 19/DATS 610
 userdata = pd.read_csv(filepath2)
 
 #%% [markdown]
-#Trinh test commmit
+#Trinh
 import os
 import pandas as pd
 dirpath = os.getcwd() 
@@ -96,35 +96,138 @@ pdata_clean.info()
 # We have 8190 rows now.
 
 #%%[markdown]
+# Convert Reviews, Installs, and Price variables into numeric
+# Start with Reviews
+print(pdata_clean.Reviews.value_counts())
+pdata_clean.Reviews = pd.to_numeric(pdata_clean.Reviews, errors='coerce')
+
+# Installs
+print(pdata_clean.Installs.value_counts())
+#Let's remove '+' and ','
+pdata_clean.Installs = pdata_clean.Installs.apply(lambda x: x.strip('+'))
+pdata_clean.Installs = pdata_clean.Installs.apply(lambda x: x.replace(',',''))
+
+pdata_clean.Installs = pd.to_numeric(pdata_clean.Installs, errors='coerce')
+
+# Price
+print(pdata_clean.Price.value_counts())
+pdata_clean.Price = pdata_clean.Price.apply(lambda x: x.strip('$'))
+pdata_clean.Price = pd.to_numeric(pdata_clean.Price, errors='coerce')
+
+#%%[markdown]
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+print(pdata_clean.Category.value_counts())
+
 # Plot counts for each Category
 plt.figure(figsize=(20,5))
 fig = sns.countplot(x=pdata_clean['Category'], palette="hls")
 fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.title('Categories and their counts')
 plt.show(fig)
 
 #%%[markdown]
-# Barplot for Catergory and Rating
+# Histogram for Rating
+pdata_clean.Rating.hist()
+plt.title('Rating Distribution')
+plt.xlabel('Rating')
+plt.ylabel('Frequency')
+
+#%%[markdown]
+# Boxplot for Catergory and Rating
 plt.figure(figsize=(8,6))
 fig = sns.barplot(x=pdata_clean['Category'], y=pdata_clean['Rating'], palette="hls")
 fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
 plt.tight_layout()
+plt.title('Category and Rating')
 plt.show(fig)
 
 #%%[markdown]
-# Plot counts for each Type
+print(pdata_clean['Type'].value_counts())
+
+# Plot counts for each Type (free app and paid app)
 fig = sns.countplot(x=pdata_clean['Type'], palette="hls")
 fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.title('Counts for paid and free apps')
+plt.show(fig)
+
+# Boxplot for Type and Rating
+plt.figure(figsize=(8,6))
+fig = sns.boxplot(x=pdata_clean['Type'], y=pdata_clean['Rating'], palette="hls")
+fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.tight_layout()
+plt.title('Type and Rating')
 plt.show(fig)
 
 #%%[markdown]
+print(pdata_clean['Installs'].value_counts())
+
 # Plot counts for Installs
 plt.figure(figsize=(20,5))
 fig = sns.countplot(x=pdata_clean['Installs'], palette="hls")
 fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.title('Number of installs and their counts')
 plt.show(fig)
+
+# Boxplot for Installs and Rating
+plt.figure(figsize=(8,6))
+fig = sns.boxplot(x=pdata_clean['Installs'], y=pdata_clean['Rating'], palette="hls", )
+fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.tight_layout()
+plt.title('Installs and Rating')
+plt.show(fig)
+
+# Boxplot for Installs and Reviews
+plt.figure(figsize=(8,6))
+fig = sns.boxplot(x=pdata_clean['Installs'], y=pdata_clean['Reviews'], palette="hls")
+fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.tight_layout()
+plt.title('Installs and Reviews')
+plt.show(fig)
+
+#%%[markdown] 
+# Scatterplot Rating vs Reviews
+plt.figure(figsize=(8,6))
+fig = sns.scatterplot(x=pdata_clean['Reviews'], y=pdata_clean['Rating'], palette="hls")
+#fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.tight_layout()
+plt.title('Rating vs Reviews')
+plt.show(fig)
+
+#%%[markdown]
+print(pdata_clean['Content Rating'].value_counts())
+
+# Plot counts for Content Rating
+fig = sns.countplot(x=pdata_clean['Content Rating'], palette="hls")
+fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.title('Content Rating and their counts')
+plt.show(fig)
+
+#%%[markdown]
+print(pdata_clean.Genres.value_counts())
+
+# Plot counts for Genres
+plt.figure(figsize=(15,20))
+fig = sns.countplot(y=pdata_clean['Genres'], palette="hls")
+fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.title('Genres and their counts')
+plt.show(fig)
+
+#%%[markdown]
+# Plot Rating, Reviews, Installs, and Price matrix
+## Scaled data
+from sklearn.preprocessing import scale
+df = pdata_clean[['Rating', 'Reviews', 'Installs', 'Price']]
+dfscale = pd.DataFrame(scale(df), columns=df.columns)
+sns.set()
+sns.pairplot(dfscale)
+
+## Take log of Reviews and Installs
+df['Log Reviews'] = np.log(df.Reviews)
+df['Log Installs'] = np.log(df.Installs)
+sns.pairplot(df)
 
 #%% [markdown]
 #Ayush
