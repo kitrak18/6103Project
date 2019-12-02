@@ -229,6 +229,169 @@ df['Log Reviews'] = np.log(df.Reviews)
 df['Log Installs'] = np.log(df.Installs)
 sns.pairplot(df)
 
+#%%[markdown]
+# Correlation matrix
+cor_matrix = pdata_clean[['Rating', 'Reviews', 'Installs', 'Price']].corr()
+f, ax = plt.subplots()
+p =sns.heatmap(cor_matrix, annot=True, cmap="YlGnBu")
+
+#%%[markdown]
+# K-means 
+from sklearn.cluster import KMeans
+
+xdata = pdata_clean[['Rating', 'Reviews', 'Installs', 'Price']]
+
+km_xdata = KMeans( n_clusters=3, init='random', n_init=10, max_iter=300, tol=1e-04, random_state=0 )
+y_km = km_xdata.fit_predict(xdata)
+
+# plot the 3 clusters
+index1 = 0
+index2 = 1
+
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=50, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=50, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+plt.scatter( xdata[y_km==2].iloc[:,index1], xdata[y_km==2].iloc[:,index2], s=50, c='lightblue', marker='v', edgecolor='black', label='cluster 3' )
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+
+#%%
+# 2 clusters
+# Rating and Reviews
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=50, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=50, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+
+#%%
+# 2 clusters
+# Reviews and Installs
+index1 = 1
+index2 = 2
+
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=50, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=50, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+
+#%%
+# 2 clusters
+# Installs and Price
+index1 = 2
+index2 = 3
+
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=50, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=50, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+
+#%%
+# 2 clusters
+# Rating and Installs
+index1 = 0
+index2 = 2
+
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=50, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=50, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+
+#%%
+# 2 clusters
+# Rating and Price
+index1 = 0
+index2 = 3
+
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=50, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=50, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+#%%
+# 4 clusters
+# Rating and Installs
+index1 = 0
+index2 = 2
+
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=50, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=50, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+plt.scatter( xdata[y_km==2].iloc[:,index1], xdata[y_km==2].iloc[:,index2], s=50, c='lightblue', marker='v', edgecolor='black', label='cluster 3' )
+
+plt.scatter( xdata[y_km==3].iloc[:,index1], xdata[y_km==3].iloc[:,index2], s=50, c='purple', marker='p', edgecolor='black', label='cluster 4' )
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+
+#%%
+# 4 clusters
+# Rating and Reviews
+index1 = 0
+index2 = 1
+
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=50, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=50, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+plt.scatter( xdata[y_km==2].iloc[:,index1], xdata[y_km==2].iloc[:,index2], s=50, c='lightblue', marker='v', edgecolor='black', label='cluster 3' )
+
+plt.scatter( xdata[y_km==3].iloc[:,index1], xdata[y_km==3].iloc[:,index2], s=50, c='purple', marker='p', edgecolor='black', label='cluster 4' )
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+
 #%% [markdown]
 #Ayush
 import os
