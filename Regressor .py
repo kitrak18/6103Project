@@ -1,5 +1,8 @@
 
 #%% 
+
+# https://www.kaggle.com/data13/machine-learning-model-to-predict-app-rating-94#Data-Exploration-and-Cleaning
+
 # Please add your own input lines , so that when we push it , we can all use our own  
 #%% [markdown]
 #Sarah 
@@ -340,10 +343,16 @@ plt.plot(n_neighbors, scores)
 # ### The RandomForestRegressor class of the sklearn.ensemble library is used to solve regression problems via random forest. The most important parameter of the RandomForestRegressor class is the n_estimators parameter. This parameter defines the number of trees in the random forest.
 
 # %%
+
+print(X_train.sample (5))
+#%%  
 model = RandomForestRegressor(n_jobs=-1)
 # Try different numbers of n_estimators - this will take a minute or so
+
+
 estimators = np.arange(10, 200, 10)
 scores = []
+
 for n in estimators:
     model.set_params(n_estimators=n)
     model.fit(X_train, y_train)
@@ -360,6 +369,8 @@ results
 predictions = model.predict(X_test)
 #%%
 'Mean Absolute Error:', metrics.mean_absolute_error(y_test, predictions)
+#%%
+'R^2', metrics.r2_score(y_test,predictions)
 
 #%% 
 'Mean Squared Error:', metrics.mean_squared_error(y_test, predictions)
@@ -368,5 +379,31 @@ predictions = model.predict(X_test)
 # %%
 'Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, predictions))
 
+
+# %%
+from sklearn import cross_validation
+from sklearn.model_selection import KFold 
+# from sklearn.cross_validation import cross_val_score,cross_val_predict
+from sklearn import metrics
+
+# %%
+# Perform 6-fold cross validation
+from sklearn.model_selection import cross_val_score
+
+estimators = np.arange(2, 20, 1)
+mscores = []
+for i in estimators:
+  scores = cross_val_score(model,X_test, y_test, cv=i)
+  # print ("Cross-validated scores:", scores)
+  print("The mean from CV = ",i," :  ", np.mean(scores))
+  mscores.append(np.mean(scores))
+
+plt.figure(figsize=(7, 5))
+plt.title("Effect of Estimators")
+plt.xlabel("no. estimator")
+plt.ylabel("mean CV score")
+plt.plot(estimators, mscores)
+results = list(zip(estimators,scores))
+results
 
 # %%
