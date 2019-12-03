@@ -236,7 +236,7 @@ f, ax = plt.subplots()
 p =sns.heatmap(cor_matrix, annot=True, cmap="YlGnBu")
 
 #%%[markdown]
-# K-means 
+# # K-means 
 from sklearn.cluster import KMeans
 
 xdata = pdata_clean[['Rating', 'Reviews', 'Installs', 'Price']]
