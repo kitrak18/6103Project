@@ -334,4 +334,39 @@ plt.xlabel("Number of Neighbors K")
 plt.ylabel("Score")
 plt.plot(n_neighbors, scores)
 
+# %%[markdown]
+
+# ### Random Forest Model
+# ### The RandomForestRegressor class of the sklearn.ensemble library is used to solve regression problems via random forest. The most important parameter of the RandomForestRegressor class is the n_estimators parameter. This parameter defines the number of trees in the random forest.
+
+# %%
+model = RandomForestRegressor(n_jobs=-1)
+# Try different numbers of n_estimators - this will take a minute or so
+estimators = np.arange(10, 200, 10)
+scores = []
+for n in estimators:
+    model.set_params(n_estimators=n)
+    model.fit(X_train, y_train)
+    scores.append(model.score(X_test, y_test))
+plt.figure(figsize=(7, 5))
+plt.title("Effect of Estimators")
+plt.xlabel("no. estimator")
+plt.ylabel("score")
+plt.plot(estimators, scores)
+results = list(zip(estimators,scores))
+results
+
+# %%
+predictions = model.predict(X_test)
+#%%
+'Mean Absolute Error:', metrics.mean_absolute_error(y_test, predictions)
+
+#%% 
+'Mean Squared Error:', metrics.mean_squared_error(y_test, predictions)
+
+
+# %%
+'Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, predictions))
+
+
 # %%
