@@ -118,7 +118,7 @@ plt.xlabel('Rating')
 plt.ylabel('Frequency')
 
 #%%[markdown]
-# Boxplot for Catergory and Rating
+# Bar chart for Catergory and Rating
 plt.figure(figsize=(8,6))
 fig = sns.barplot(x=pdata_clean['Category'], y=pdata_clean['Rating'], palette="hls")
 fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
@@ -129,11 +129,13 @@ plt.show(fig)
 #%%[markdown]
 print(pdata_clean['Type'].value_counts())
 
-# Plot counts for each Type (free app and paid app)
+# Plot counts for each app type (free vs. paid apps)
 fig = sns.countplot(x=pdata_clean['Type'], palette="hls")
 fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
 plt.title('Counts for paid and free apps')
 plt.show(fig)
+# There are significantly more free apps on the GooglePlay Store than paid apps.
+
 
 # Boxplot for Type and Rating
 plt.figure(figsize=(8,6))
@@ -142,18 +144,19 @@ fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
 plt.tight_layout()
 plt.title('Type and Rating')
 plt.show(fig)
+# Comparing the distribution of ratings between paid and free apps shows that paid apps have a higher mean rating than free apps. This would be an interesting relationship to potentially explore.
 
 #%%[markdown]
 print(pdata_clean['Installs'].value_counts())
 
-# Plot counts for Installs
+# Aggregate the counts by Installs
 plt.figure(figsize=(20,5))
 fig = sns.countplot(x=pdata_clean['Installs'], palette="hls")
 fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
 plt.title('Number of installs and their counts')
 plt.show(fig)
 
-# Boxplot for Installs and Rating
+# Bar chart for Installs and Rating
 plt.figure(figsize=(8,6))
 fig = sns.boxplot(x=pdata_clean['Installs'], y=pdata_clean['Rating'], palette="hls", )
 fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
