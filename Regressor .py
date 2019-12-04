@@ -121,7 +121,7 @@ dfChkValueCnts(pdata)
 #%%
 
 #View entire data set 
-pdata.head()
+pdata.sample(10)
 #%%
 # pdata.describe
 pdata.shape
@@ -162,13 +162,13 @@ pdata.info()
 
 
 #%%[markdown]
-#  ####Exploring missing data and checking if any has NaN values
+#  #### Exploring missing data and checking if any has NaN values
 plt.figure(figsize=(7, 5))
 sns.heatmap(df.isnull(), cmap='viridis')
 df.isnull().any()
 
 # %%[markdown]
-# ####Looks like there are missing values in "Rating", "Type", "Content Rating" and " Android Ver". But most of these missing values in Rating column.
+# #### Looks like there are missing values in "Rating", "Type", "Content Rating" and " Android Ver". But most of these missing values in Rating column.
 df.isnull().sum()
 
 # %%[markdown]
@@ -192,6 +192,10 @@ df['Current Ver'] = df['Current Ver'].fillna(df['Current Ver'].median())
 #%%[markdown]
 # ### Count the number of unique values in category column 
 df['Category'].unique()
+
+#%%
+df['Genres'].unique().shape
+
 
 
 # %%[markdown]
@@ -321,7 +325,27 @@ model.fit(X_train, y_train)
 
 # %%# Calculate the mean accuracy of the KNN model
 accuracy = model.score(X_test,y_test)
-'Accuracy: ' + str(np.round(accuracy*100, 2)) + '%'
+'Accuracy: ' + str(np.round(accuracy*100, 3)) + '%'
+
+#%%
+y_pred = model.predict(X_test)
+
+
+# from sklearn.metrics import confusion_matrix
+# from sklearn.metrics import accuracy_score
+# accuracy_score(y_test, y_pred)
+# from sklearn.metrics import classification_report
+# classification_report(y_test, y_pred)
+
+from sklearn.metrics import explained_variance_score
+print("Explained Variance",explained_variance_score(y_test, y_pred))
+
+from sklearn.metrics import mean_squared_error
+print("Mean_squared_error",mean_squared_error(y_test, y_pred))
+
+from sklearn.metrics import r2_score
+print("r Square error",r2_score(y_test, y_pred))
+
 
 # %%
 # Try different numbers of n_estimators - this will take a minute or so
@@ -334,7 +358,7 @@ for n in n_neighbors:
 plt.figure(figsize=(7, 5))
 plt.title("Effect of Estimators")
 plt.xlabel("Number of Neighbors K")
-plt.ylabel("Score")
+plt.ylabel("R2 Score")
 plt.plot(n_neighbors, scores)
 
 # %%[markdown]
@@ -405,5 +429,37 @@ plt.ylabel("mean CV score")
 plt.plot(estimators, mscores)
 results = list(zip(estimators,scores))
 results
+
+# %%
+
+# Gradient Boosting Regression 
+
+from sklearn import ensemble
+from sklearn import datasets
+from sklearn.utils import shuffle
+from sklearn.metrics import mean_squared_error
+
+# params = {'n_estimators': 500, 'max_depth': 4, 'min_samples_split': 2,
+#           'learning_rate': 0.01, 'loss': 'ls'}
+clf = ensemble.GradientBoostingRegressor()
+estimators = np.arange(10, 200, 10)
+scores = []
+
+for n in estimators:
+    clf.set_params(n_estimators=n)
+    clf.fit(X_train, y_train)
+    scores.append(clf.score(X_test, y_test))
+plt.figure(figsize=(7, 5))
+plt.title("Effect of Estimators")
+plt.xlabel("Number of Neighbors K")
+plt.ylabel("R2 Score")
+plt.plot(estimators, scores)
+results = list(zip(estimators,scores))
+results
+# clf.fit(X_train, y_train)
+# mse = mean_squared_error(y_test, clf.predict(X_test))
+
+# print(clf.score(X_test,y_test)*100)
+# print("MSE: %.8f" % mse)
 
 # %%
