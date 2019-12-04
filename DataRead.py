@@ -6,6 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 plt.style.use('classic')
 import seaborn as sns
+import math
 
 #%% 
 # Please add your own input lines , so that when we push it , we can all use our own  
@@ -97,9 +98,6 @@ pdata_clean.info()
 # We have 8190 rows now.
 
 #%%[markdown]
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 print(pdata_clean.Category.value_counts())
 
@@ -145,6 +143,62 @@ plt.tight_layout()
 plt.title('Type and Rating')
 plt.show(fig)
 # Comparing the distribution of ratings between paid and free apps shows that paid apps have a higher mean rating than free apps. This would be an interesting relationship to potentially explore.
+
+#%%
+
+# Is there a relationship between the size of an app and the rating? I will use a side by side axis chart to visualize the two variables.
+
+# First I will clean up the Size variable, which is currently a factor. SizeNum will be the Size variable converted to numeric.
+pdata_clean['SizeNum']=pdata_clean['Size'].fillna(0)
+pdata_clean['SizeNum'] = pdata_clean['SizeNum'].apply(lambda x: str(x).replace('Varies with device', 'NaN') if 'Varies with device' in str(x) else x)
+pdata_clean['SizeNum'] = pdata_clean['SizeNum'].apply(lambda x: str(x).replace('M', '') if 'M' in str(x) else x)
+pdata_clean['SizeNum']=pdata_clean['SizeNum'].apply(lambda x:str(x).replace(',','')if 'M' in str(x) else x)
+pdata_clean['SizeNum']=pdata_clean['SizeNum'].apply(lambda x:float(str(x).replace('k',''))/1000 if 'k'in str(x) else x)
+pdata_clean['SizeNum']=pdata_clean['SizeNum'].apply(lambda x:float(x))
+
+# Plot the size by side axis chart
+sns.jointplot(pdata_clean['SizeNum'],pdata_clean['Rating'],kind='kde',color='lightblue')
+
+# There appears to be an interesting relationship between size of the application and rating. Smaller apps have ratings concentrated around 4.0 - 4.5 and the size of apps displays a slightly normal distribution (although right skewed) and ranges from 0M - 60M.
+
+#%%
+
+# Is there a relationship between rating and price? For paid apps, we will visualize the relationship with price.
+
+pdata_clean['PriceNum'] = pdata_clean['Price'].apply(lambda x: str(x).replace('$', '') if '$' in str(x) else str(x))
+pdata_clean['PriceNum'] = pdata_clean['PriceNum'].apply(lambda x: float(x))
+
+paid_apps = pdata_clean[pdata_clean.Price > 0]
+
+sns.jointplot( "PriceNum", "Rating", paid_apps,color='purple', marginal_kws=dict(bins = 25, rug = True), annot_kws = dict(stat = "r"), kind = 'scatter')
+
+# It looks like there are some far outliers. Let's take a look at what they are
+pdata_clean[['Category','App','PriceNum','Rating']][pdata_clean.Price > 70]
+# Most seem to be a variation of "I Am Rich" and fall under the family, lifestyle, and finance categories. They are all $399.99 except for the $400 "Trump Edition".
+
+# I will remove the "rich" outliers and re-chart the data
+paid_apps2 = paid_apps[paid_apps.Price < 70]
+
+sns.jointplot( "PriceNum", "Rating", paid_apps2,color='purple', marginal_kws=dict(bins = 25, rug = True), annot_kws = dict(stat = "r"), kind = 'hex')
+
+# It's definitely easier to see the relationship between price and rating now with the outliers removed and heat chart applied. It seems that most highly rated apps are in the lower price range, but most apps overall are in that same range. There does not seem to be a clear correlation here. Correlations will be explored in the next chunk.
+
+
+#%%
+
+# Correlation plot between numeric variables
+# First, I will convert installs and reviews to numeric variables
+
+pdata_clean['InstallsNum'] = pdata_clean['Installs'].apply(lambda x: x.replace('+', '') if '+' in str(x) else x)
+pdata_clean['InstallsNum'] = pdata_clean['InstallsNum'].apply(lambda x: x.replace(',', '') if ',' in str(x) else x)
+pdata_clean['InstallsNum']=pdata_clean['InstallsNum'].apply(lambda x:float(x))
+
+pdata_clean['ReviewsNum'] = pdata_clean['Reviews'].apply(lambda x: int(x))
+
+# Plot the correlation of numeric variables
+correlation = pdata_clean.corr()
+sns.heatmap(correlation, annot=True, cmap="coolwarm_r")
+# This plot shows that not many of the variables are strongly correlated, except for installs and reviews. This intrinsically makes sense because the larger number of installs an app has, the more likely it is to be reviewed.
 
 #%%[markdown]
 print(pdata_clean['Installs'].value_counts())
