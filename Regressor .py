@@ -351,16 +351,54 @@ print("r Square error",r2_score(y_test, y_pred))
 # Try different numbers of n_estimators - this will take a minute or so
 n_neighbors = np.arange(1, 50, 1)
 scores = []
+rmse_val = []
 for n in n_neighbors:
     model.set_params(n_neighbors=n)
     model.fit(X_train, y_train)
     scores.append(model.score(X_test, y_test))
+    error = np.sqrt(mean_squared_error(y_test,model.predict(X_test)))
+    rmse_val.append(error)
 plt.figure(figsize=(7, 5))
 plt.title("Effect of Estimators")
 plt.xlabel("Number of Neighbors K")
 plt.ylabel("R2 Score")
 plt.plot(n_neighbors, scores)
 
+#elbow curve
+curve = pd.DataFrame(rmse_val)
+curve.plot()
+plt.title("RMSE Value's")
+plt.xlabel("Number of Neighbors K")
+plt.ylabel("RMSE")
+print("Ideal K value at the elbow at K=10")
+
+# https://stackabuse.com/k-nearest-neighbors-algorithm-in-python-and-scikit-learn/
+
+
+
+
+
+
+
+
+
+#%%
+n_neighbors = 5
+
+for i, weights in enumerate(['uniform']):
+    knn = KNeighborsRegressor(n_neighbors, weights=weights)
+    y_ = knn.fit(X_train, y_train).predict(X_test)
+
+    plt.subplot(2, 1, i + 1)
+    plt.scatter(X, y, color='darkorange', label='data')
+    plt.plot(X_test, y_, color='navy', label='prediction')
+    plt.axis('tight')
+    plt.legend()
+    plt.title("KNeighborsRegressor (k = %i, weights = '%s')" % (n_neighbors,
+                                                                weights))
+
+plt.tight_layout()
+plt.show()
 # %%[markdown]
 
 # ### Random Forest Model
@@ -442,7 +480,7 @@ from sklearn.metrics import mean_squared_error
 # params = {'n_estimators': 500, 'max_depth': 4, 'min_samples_split': 2,
 #           'learning_rate': 0.01, 'loss': 'ls'}
 clf = ensemble.GradientBoostingRegressor()
-estimators = np.arange(10, 200, 10)
+estimators = np.arange(10, 600, 50)
 scores = []
 
 for n in estimators:
@@ -451,7 +489,7 @@ for n in estimators:
     scores.append(clf.score(X_test, y_test))
 plt.figure(figsize=(7, 5))
 plt.title("Effect of Estimators")
-plt.xlabel("Number of Neighbors K")
+plt.xlabel("no: of Estimators")
 plt.ylabel("R2 Score")
 plt.plot(estimators, scores)
 results = list(zip(estimators,scores))
