@@ -168,16 +168,16 @@ sns.jointplot(pdata_clean['SizeNum'],pdata_clean['Rating'],kind='kde',color='lig
 pdata_clean['PriceNum'] = pdata_clean['Price'].apply(lambda x: str(x).replace('$', '') if '$' in str(x) else str(x))
 pdata_clean['PriceNum'] = pdata_clean['PriceNum'].apply(lambda x: float(x))
 
-paid_apps = pdata_clean[pdata_clean.Price > 0]
+paid_apps = pdata_clean[pdata_clean.PriceNum > 0]
 
 sns.jointplot( "PriceNum", "Rating", paid_apps,color='purple', marginal_kws=dict(bins = 25, rug = True), annot_kws = dict(stat = "r"), kind = 'scatter')
 
 # It looks like there are some far outliers. Let's take a look at what they are
-pdata_clean[['Category','App','PriceNum','Rating']][pdata_clean.Price > 70]
+pdata_clean[['Category','App','PriceNum','Rating']][pdata_clean.PriceNum > 70]
 # Most seem to be a variation of "I Am Rich" and fall under the family, lifestyle, and finance categories. They are all $399.99 except for the $400 "Trump Edition".
 
 # I will remove the "rich" outliers and re-chart the data
-paid_apps2 = paid_apps[paid_apps.Price < 70]
+paid_apps2 = paid_apps[paid_apps.PriceNum < 70]
 
 sns.jointplot( "PriceNum", "Rating", paid_apps2,color='purple', marginal_kws=dict(bins = 25, rug = True), annot_kws = dict(stat = "r"), kind = 'hex')
 
