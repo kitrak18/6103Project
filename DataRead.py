@@ -22,7 +22,7 @@ filepath2 = 'C:/Users/sjg27/OneDrive/Documents/GWU Data Science/Fall 19/DATS 610
 userdata = pd.read_csv(filepath2)
 
 #%% [markdown]
-#Trinh test commmit
+#Trinh
 import os
 import pandas as pd
 dirpath = os.getcwd() 
@@ -96,33 +96,283 @@ pdata_clean.info()
 
 # We have 8190 rows now.
 
-#%%
+#%%[markdown]
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+print(pdata_clean.Category.value_counts())
+
 # Plot counts for each Category
 plt.figure(figsize=(20,5))
 fig = sns.countplot(x=pdata_clean['Category'], palette="hls")
 fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.title('Categories and their counts')
 plt.show(fig)
 
 #%%[markdown]
-# Barplot for Catergory and Rating
+# Histogram for Rating
+pdata_clean.Rating.hist()
+plt.title('Rating Distribution')
+plt.xlabel('Rating')
+plt.ylabel('Frequency')
+
+#%%[markdown]
+# Boxplot for Catergory and Rating
 plt.figure(figsize=(8,6))
 fig = sns.barplot(x=pdata_clean['Category'], y=pdata_clean['Rating'], palette="hls")
 fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
 plt.tight_layout()
+plt.title('Category and Rating')
 plt.show(fig)
 
 #%%[markdown]
-# Plot counts for each Type
+print(pdata_clean['Type'].value_counts())
+
+# Plot counts for each Type (free app and paid app)
 fig = sns.countplot(x=pdata_clean['Type'], palette="hls")
 fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.title('Counts for paid and free apps')
+plt.show(fig)
+
+# Boxplot for Type and Rating
+plt.figure(figsize=(8,6))
+fig = sns.boxplot(x=pdata_clean['Type'], y=pdata_clean['Rating'], palette="hls")
+fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.tight_layout()
+plt.title('Type and Rating')
 plt.show(fig)
 
 #%%[markdown]
+print(pdata_clean['Installs'].value_counts())
+
 # Plot counts for Installs
 plt.figure(figsize=(20,5))
 fig = sns.countplot(x=pdata_clean['Installs'], palette="hls")
 fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.title('Number of installs and their counts')
 plt.show(fig)
+
+# Boxplot for Installs and Rating
+plt.figure(figsize=(8,6))
+fig = sns.boxplot(x=pdata_clean['Installs'], y=pdata_clean['Rating'], palette="hls", )
+fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.tight_layout()
+plt.title('Installs and Rating')
+plt.show(fig)
+
+# Boxplot for Installs and Reviews
+plt.figure(figsize=(8,6))
+fig = sns.boxplot(x=pdata_clean['Installs'], y=pdata_clean['Reviews'], palette="hls")
+fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.tight_layout()
+plt.title('Installs and Reviews')
+plt.show(fig)
+
+#%%[markdown] 
+# Scatterplot Rating vs Reviews
+plt.figure(figsize=(8,6))
+fig = sns.scatterplot(x=pdata_clean['Reviews'], y=pdata_clean['Rating'], palette="hls")
+#fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.tight_layout()
+plt.title('Rating vs Reviews')
+plt.show(fig)
+
+#%%[markdown]
+print(pdata_clean['Content Rating'].value_counts())
+
+# Plot counts for Content Rating
+fig = sns.countplot(x=pdata_clean['Content Rating'], palette="hls")
+fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.title('Content Rating and their counts')
+plt.show(fig)
+
+#%%[markdown]
+print(pdata_clean.Genres.value_counts())
+
+# Plot counts for Genres
+plt.figure(figsize=(15,20))
+fig = sns.countplot(y=pdata_clean['Genres'], palette="hls")
+fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.title('Genres and their counts')
+plt.show(fig)
+
+#%%[markdown]
+# Plot Rating, Reviews, Installs, and Price matrix
+## Scaled data
+from sklearn.preprocessing import scale
+df = pdata_clean[['Rating', 'Reviews', 'Installs', 'Price']]
+dfscale = pd.DataFrame(scale(df), columns=df.columns)
+sns.set()
+sns.pairplot(dfscale)
+
+## Take log of Reviews and Installs
+df['Log Reviews'] = np.log(df.Reviews)
+df['Log Installs'] = np.log(df.Installs)
+sns.pairplot(df)
+
+#%%[markdown]
+# Correlation matrix
+cor_matrix = pdata_clean[['Rating', 'Reviews', 'Installs', 'Price']].corr()
+f, ax = plt.subplots()
+p =sns.heatmap(cor_matrix, annot=True, cmap="YlGnBu")
+
+#%%[markdown]
+# # K-means 
+from sklearn.cluster import KMeans
+
+xdata = pdata_clean[['Rating', 'Reviews', 'Installs', 'Price']]
+
+km_xdata = KMeans( n_clusters=3, init='random', n_init=10, max_iter=300, tol=1e-04, random_state=0 )
+y_km = km_xdata.fit_predict(xdata)
+
+# plot the 3 clusters
+index1 = 0
+index2 = 1
+
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=50, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=50, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+plt.scatter( xdata[y_km==2].iloc[:,index1], xdata[y_km==2].iloc[:,index2], s=50, c='lightblue', marker='v', edgecolor='black', label='cluster 3' )
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+
+#%%
+# 2 clusters
+# Rating and Reviews
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=50, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=50, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+
+#%%
+# 2 clusters
+# Reviews and Installs
+index1 = 1
+index2 = 2
+
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=50, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=50, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+
+#%%
+# 2 clusters
+# Installs and Price
+index1 = 2
+index2 = 3
+
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=50, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=50, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+
+#%%
+# 2 clusters
+# Rating and Installs
+index1 = 0
+index2 = 2
+
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=50, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=50, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+
+#%%
+# 2 clusters
+# Rating and Price
+index1 = 0
+index2 = 3
+
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=50, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=50, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+#%%
+# 4 clusters
+# Rating and Installs
+index1 = 0
+index2 = 2
+
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=50, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=50, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+plt.scatter( xdata[y_km==2].iloc[:,index1], xdata[y_km==2].iloc[:,index2], s=50, c='lightblue', marker='v', edgecolor='black', label='cluster 3' )
+
+plt.scatter( xdata[y_km==3].iloc[:,index1], xdata[y_km==3].iloc[:,index2], s=50, c='purple', marker='p', edgecolor='black', label='cluster 4' )
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+
+#%%
+# 4 clusters
+# Rating and Reviews
+index1 = 0
+index2 = 1
+
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=50, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=50, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+plt.scatter( xdata[y_km==2].iloc[:,index1], xdata[y_km==2].iloc[:,index2], s=50, c='lightblue', marker='v', edgecolor='black', label='cluster 3' )
+
+plt.scatter( xdata[y_km==3].iloc[:,index1], xdata[y_km==3].iloc[:,index2], s=50, c='purple', marker='p', edgecolor='black', label='cluster 4' )
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
 
 #%% [markdown]
 #Ayush
