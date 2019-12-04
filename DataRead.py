@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 plt.style.use('classic')
+import seaborn as sns
 
 #%% 
 # Please add your own input lines , so that when we push it , we can all use our own  
@@ -95,10 +96,7 @@ pdata_clean.info()
 
 # We have 8190 rows now.
 
-#%%[markdown]
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
+#%%
 # Plot counts for each Category
 plt.figure(figsize=(20,5))
 fig = sns.countplot(x=pdata_clean['Category'], palette="hls")
@@ -166,6 +164,7 @@ userdata.shape
 #%%
 
 # Histogram of rating by category
-groups = pdata.groupby('Category').filter(lambda x: len(x) > 286).reset_index()
+# DESCRIBE CHARTS
+groups = pdata_clean.groupby('Category').filter(lambda x: len(x) > 286).reset_index()
 array = groups['Rating'].hist(by=groups['Category'], sharex=True, figsize=(20,20))
 
