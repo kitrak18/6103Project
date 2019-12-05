@@ -435,6 +435,76 @@ plt.grid()
 plt.show()
 
 #%%
+km_xdata = KMeans( n_clusters=3, init='random', n_init=10, max_iter=300, tol=1e-04, random_state=0 )
+y_km = km_xdata.fit_predict(xdata)
+
+# plot the 3 clusters
+index1 = 5 #5 #4 
+index2 = 0#0
+
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=25, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=25, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+plt.scatter( xdata[y_km==2].iloc[:,index1], xdata[y_km==2].iloc[:,index2], s=25, c='lightblue', marker='v', edgecolor='black', label='cluster 3')
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+#%%
+# 4 clusters
+km_xdata = KMeans( n_clusters=4, init='random', n_init=10, max_iter=300, tol=1e-04, random_state=0 )
+y_km = km_xdata.fit_predict(xdata)
+
+# plot the 4 clusters
+index1 = 4 #Size
+index2 = 0 #Rating
+
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=25, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=25, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+plt.scatter( xdata[y_km==2].iloc[:,index1], xdata[y_km==2].iloc[:,index2], s=25, c='lightblue', marker='v', edgecolor='black', label='cluster 3')
+
+plt.scatter( xdata[y_km==2].iloc[:,index1], xdata[y_km==2].iloc[:,index2], s=25, c='pink', marker='p', edgecolor='black', label='cluster 4')
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+
+#%%
+# 4 clusters
+km_xdata = KMeans( n_clusters=4, init='random', n_init=10, max_iter=300, tol=1e-04, random_state=0 )
+y_km = km_xdata.fit_predict(xdata)
+
+# plot the 4 clusters
+index1 = 5 #Genre
+index2 = 0 #Rating
+
+plt.scatter( xdata[y_km==0].iloc[:,index1], xdata[y_km==0].iloc[:,index2], s=25, c='lightgreen', marker='s', edgecolor='black', label='cluster 1' )
+
+plt.scatter( xdata[y_km==1].iloc[:,index1], xdata[y_km==1].iloc[:,index2], s=25, c='orange', marker='o', edgecolor='black', label='cluster 2' )
+
+plt.scatter( xdata[y_km==2].iloc[:,index1], xdata[y_km==2].iloc[:,index2], s=25, c='lightblue', marker='v', edgecolor='black', label='cluster 3')
+
+plt.scatter( xdata[y_km==2].iloc[:,index1], xdata[y_km==2].iloc[:,index2], s=25, c='pink', marker='p', edgecolor='black', label='cluster 4')
+
+# plot the centroids
+plt.scatter( km_xdata.cluster_centers_[:, index1], km_xdata.cluster_centers_[:, index2], s=250, marker='*', c='red', edgecolor='black', label='centroids' )
+plt.legend(scatterpoints=1)
+plt.xlabel(xdata.columns[index1])
+plt.ylabel(xdata.columns[index2])
+plt.grid()
+plt.show()
+#%%
 
 # %%[markdown]
 
