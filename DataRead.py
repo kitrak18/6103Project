@@ -240,10 +240,20 @@ print(pdata_clean.Genres.value_counts())
 
 # Plot counts for Genres
 plt.figure(figsize=(15,20))
-fig = sns.countplot(y=pdata_clean['Genres'], palette="hls")
-fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+fig2 = sns.countplot(y=pdata_clean['Genres'], palette="hls")
+fig2.set_xticklabels(fig.get_xticklabels(),rotation=90)
 plt.title('Genres and their counts')
 plt.show(fig)
+
+# We'll narrow it down to show the top 20 to get a sense of the most dominant genres in the Google Play Store
+
+plt.figure(figsize=(10, 7))
+genres = pdata_clean["Genres"].value_counts()[:20]
+fig3 = sns.barplot(x=genres.values, y=genres.index, palette="GnBu_r")
+plt.title('Top 20 Genres and their counts')
+# fig3.savefig('C:/Users/sjg27/OneDrive/Documents/GWU Data Science/Fall 19/DATS 6103 Intro to DM/Project/genreplot.png')
+
+# The top three genres with the most apps in the Google Play Store are Tools, Entertainment, and Education
 
 #%%[markdown]
 # Plot Rating, Reviews, Installs, Price, and Size matrix
