@@ -84,27 +84,43 @@ dfChkValueCnts(pdata)
 #%%[markdown]
 # The dataset has 10841 rows and 13 columns. There are duplicates in App names. Let's drop duplicates.
 
-#%%
 pdatac = pdata.drop_duplicates(subset=['App'], keep = 'first')
 print(pdatac.shape)
 print(pdatac.info())
 
 #%%[markdown]
-# There are NA values in Rating, Type, and Content Rating. Let's remove them
+# There are NA values in Rating, Type, Content Rating, Current Version, and Android Version
+NanValues = pd.DataFrame(pdata, columns = pdata.columns)
+NanChart = NanValues.isnull().sum()
+NanChart
 
+# Chart the number of NaN values for each variable 
+fig = sns.barplot(x=NanChart.index,y=NanChart.values, palette="hls")
+fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.title('Counts of NaN Values')
+
+for i in fig.patches:
+  fig.text(i.get_x(), i.get_height() + 20, \
+      str(round((i.get_height()), 2)), fontsize=11, color='black', rotation=0)
+
+plt.show(fig)
+
+#%%
+# Let's clean out these NaN values
 pdata_clean = pdatac.dropna()
 pdata_clean.info()
 
+print(pdata_clean.info())
 # We have 8190 rows now.
 
 #%%[markdown]
 
 print(pdata_clean.Category.value_counts())
 
-# Plot counts for each Category
-plt.figure(figsize=(20,5))
-fig = sns.countplot(x=pdata_clean['Category'], palette="hls")
-fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+# Plot count of apps for each Category
+plt.figure(figsize=(10, 7))
+category = pdata_clean["Category"].value_counts()[:34]
+fig = sns.barplot(x=category.values, y=category.index, palette="viridis")
 plt.title('Categories and their counts')
 plt.show(fig)
 
