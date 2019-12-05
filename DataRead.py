@@ -226,15 +226,6 @@ plt.tight_layout()
 plt.title('Installs and Reviews')
 plt.show(fig)
 
-#%%[markdown] 
-# Scatterplot Rating vs Reviews
-plt.figure(figsize=(8,6))
-fig = sns.scatterplot(x=pdata_clean['Reviews'], y=pdata_clean['Rating'], palette="hls")
-#fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
-plt.tight_layout()
-plt.title('Rating vs Reviews')
-plt.show(fig)
-
 #%%[markdown]
 print(pdata_clean['Content Rating'].value_counts())
 
@@ -255,24 +246,28 @@ plt.title('Genres and their counts')
 plt.show(fig)
 
 #%%[markdown]
-# Plot Rating, Reviews, Installs, and Price matrix
+# Plot Rating, Reviews, Installs, Price, and Size matrix
 ## Scaled data
 from sklearn.preprocessing import scale
-df = pdata_clean[['Rating', 'Reviews', 'Installs', 'Price']]
+df = pdata_clean[['Rating', 'ReviewsNum', 'InstallsNum', 'PriceNum','SizeNum']]
 dfscale = pd.DataFrame(scale(df), columns=df.columns)
 sns.set()
 sns.pairplot(dfscale)
 
 ## Take log of Reviews and Installs
-df['Log Reviews'] = np.log(df.Reviews)
-df['Log Installs'] = np.log(df.Installs)
-sns.pairplot(df)
+df['Log ReviewsNum'] = np.log(df.ReviewsNum)
+df['Log InstallsNum'] = np.log(df.InstallsNum)
+fig = sns.pairplot(df)
+# fig.savefig('C:/Users/sjg27/OneDrive/Documents/GWU Data Science/Fall 19/DATS 6103 Intro to DM/Project/pairplot.png')
 
-#%%[markdown]
-# Correlation matrix
-cor_matrix = pdata_clean[['Rating', 'Reviews', 'Installs', 'Price']].corr()
-f, ax = plt.subplots()
-p =sns.heatmap(cor_matrix, annot=True, cmap="YlGnBu")
+#%%[markdown] 
+# Focus on the scatterplot of Rating vs Reviews
+plt.figure(figsize=(8,6))
+fig = sns.scatterplot(x=pdata_clean['ReviewsNum'], y=pdata_clean['Rating'], palette="hls")
+#fig.set_xticklabels(fig.get_xticklabels(),rotation=90)
+plt.tight_layout()
+plt.title('Rating vs Reviews')
+plt.show(fig)
 
 #%%[markdown]
 # # K-means 
