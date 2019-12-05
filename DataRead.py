@@ -84,9 +84,11 @@ dfChkValueCnts(pdata)
 #%%[markdown]
 # The dataset has 10841 rows and 13 columns. There are duplicates in App names. Let's drop duplicates.
 
-pdatac = pdata.drop_duplicates(subset=['App'], keep = 'first')
+pdatac = pdata.drop_duplicates(subset=['App'], keep = 'last')
 print(pdatac.shape)
 print(pdatac.info())
+
+# Keep the last instance because it is the most recent version of the App
 
 #%%[markdown]
 # There are NA values in Rating, Type, Content Rating, Current Version, and Android Version
